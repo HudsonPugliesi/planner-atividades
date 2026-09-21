@@ -24,8 +24,8 @@ module.exports = async function handler(req, res) {
 
     if (req.method === 'POST' || req.method === 'PUT') {
       const body = req.body;
-      if (!body || typeof body !== 'object') {
-        res.status(400).json({ error: 'invalid body' });
+      if (!body || typeof body !== 'object' || Array.isArray(body) || !Array.isArray(body.groups)) {
+        res.status(400).json({ error: 'invalid body: expected an object with a "groups" array' });
         return;
       }
       await sql`
