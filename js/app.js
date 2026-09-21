@@ -24,16 +24,18 @@
       title: "Atividades",
       groups: [
         {
-          id: uid(), name: "Tarefas pendentes", color: "#5b57ea", collapsed:false,
+          id: uid(), name: "Cronograma de Casa", color: "#f5a623", collapsed:false,
           tasks: [
-            {id:uid(), name:"Tarefa 1", owner:"Hudson", status:"progress", start:"2026-09-20", end:"2026-09-21", files:false},
-            {id:uid(), name:"Tarefa 2", owner:"", status:"done", start:"2026-09-22", end:"2026-09-23", files:true},
-            {id:uid(), name:"Tarefa 3", owner:"", status:"stuck", start:"2026-09-24", end:"2026-09-25", files:false}
+            {id:uid(), name:"Organizar contas do mês", owner:"Hudson", status:"progress", start:"2026-09-20", end:"2026-09-20", files:false},
+            {id:uid(), name:"Fazer compras do mercado", owner:"", status:"stuck", start:"2026-09-23", end:"2026-09-23", files:false}
           ]
         },
         {
-          id: uid(), name: "Concluído", color: "#28c76f", collapsed:false,
-          tasks: []
+          id: uid(), name: "Cronograma de Trabalho", color: "#5b57ea", collapsed:false,
+          tasks: [
+            {id:uid(), name:"Enviar relatório semanal", owner:"Hudson", status:"progress", start:"2026-09-21", end:"2026-09-21", files:true},
+            {id:uid(), name:"Reunião com o time", owner:"", status:"done", start:"2026-09-22", end:"2026-09-22", files:false}
+          ]
         }
       ]
     };
