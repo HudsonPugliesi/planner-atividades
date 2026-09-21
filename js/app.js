@@ -40,23 +40,41 @@
   }
 
   var STORE_KEY = "planner-monday-style-v1";
+
+  function normalize(d){
+    if(!d || !d.groups) d = defaultData();
+    // Migração: versões antigas podiam acumular um intervalo de datas ao
+    // reeditar o Prazo várias vezes; normaliza para um único dia (start = end).
+    d.groups.forEach(function(g){
+      g.tasks.forEach(function(t){
+        if(t.end) t.start = t.end;
+      });
+    });
+    return d;
+  }
+
   var data = null;
   try{
     var raw = localStorage.getItem(STORE_KEY);
     data = raw ? JSON.parse(raw) : defaultData();
   }catch(e){ data = defaultData(); }
-  if(!data || !data.groups) data = defaultData();
+  data = normalize(data);
 
-  // Migração: versões antigas podiam acumular um intervalo de datas ao
-  // reeditar o Prazo várias vezes; normaliza para um único dia (start = end).
-  data.groups.forEach(function(g){
-    g.tasks.forEach(function(t){
-      if(t.end) t.start = t.end;
-    });
-  });
+  var remoteSaveTimer = null;
+  function queueRemoteSave(){
+    clearTimeout(remoteSaveTimer);
+    remoteSaveTimer = setTimeout(function(){
+      fetch("/api/board", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify(data)
+      }).catch(function(){ /* offline ou API indisponível: fica só no localStorage por enquanto */ });
+    }, 500);
+  }
 
   function save(){
     try{ localStorage.setItem(STORE_KEY, JSON.stringify(data)); }catch(e){}
+    queueRemoteSave();
   }
 
   var boardEl = document.getElementById("view-board");
@@ -328,4 +346,22 @@
 
   renderBoard();
   renderCalendar();
+
+  // Sincroniza com o banco de dados (Vercel Postgres) assim que a página abre.
+  // O render acima já mostrou o cache local (ou os dados padrão) instantaneamente;
+  // aqui atualizamos com o que está salvo no servidor, se houver.
+  fetch("/api/board")
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(remote){
+      if(remote && remote.groups){
+        data = normalize(remote);
+        try{ localStorage.setItem(STORE_KEY, JSON.stringify(data)); }catch(e){}
+        renderBoard();
+        if(calEl.style.display !== "none") renderCalendar();
+      } else if(remote === null){
+        // Banco ainda vazio: envia o estado atual como valor inicial.
+        queueRemoteSave();
+      }
+    })
+    .catch(function(){ /* API indisponível (ex.: aberto localmente sem Vercel) — segue só com localStorage */ });
 })();
