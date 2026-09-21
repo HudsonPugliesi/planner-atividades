@@ -2,9 +2,9 @@
   "use strict";
 
   var STATUS = {
-    progress: {label:"Em andamento", cls:"s-progress", color:"#f5a623"},
-    done:     {label:"Feito",        cls:"s-done",     color:"#28c76f"},
-    stuck:    {label:"Parado",       cls:"s-stuck",     color:"#e2445c"},
+    progress: {label:"Em andamento", cls:"s-progress", color:"#e8993d"},
+    done:     {label:"Feito",        cls:"s-done",     color:"#34b37e"},
+    stuck:    {label:"Parado",       cls:"s-stuck",     color:"#e8607e"},
     empty:    {label:"—",            cls:"s-empty",     color:null}
   };
 
@@ -24,14 +24,14 @@
       title: "Atividades",
       groups: [
         {
-          id: uid(), name: "Cronograma de Casa", color: "#f5a623", collapsed:false,
+          id: uid(), name: "Cronograma de Casa", color: "#ffb49a", collapsed:false,
           tasks: [
             {id:uid(), name:"Organizar contas do mês", owner:"Hudson", status:"progress", start:"2026-09-20", end:"2026-09-20", files:false},
             {id:uid(), name:"Fazer compras do mercado", owner:"", status:"stuck", start:"2026-09-23", end:"2026-09-23", files:false}
           ]
         },
         {
-          id: uid(), name: "Cronograma de Trabalho", color: "#5b57ea", collapsed:false,
+          id: uid(), name: "Cronograma de Trabalho", color: "#b9a6f2", collapsed:false,
           tasks: [
             {id:uid(), name:"Enviar relatório semanal", owner:"Hudson", status:"progress", start:"2026-09-21", end:"2026-09-21", files:true},
             {id:uid(), name:"Reunião com o time", owner:"", status:"done", start:"2026-09-22", end:"2026-09-22", files:false}
@@ -179,7 +179,7 @@
       return;
     }
     if(e.target.id === "add-group-btn"){
-      data.groups.push({id:uid(), name:"Novo grupo", color:"#8b87ff", collapsed:false, tasks:[]});
+      data.groups.push({id:uid(), name:"Novo grupo", color:"#8fd1c9", collapsed:false, tasks:[]});
       save(); renderBoard();
       return;
     }
