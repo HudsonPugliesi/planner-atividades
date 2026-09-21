@@ -19,6 +19,22 @@
     return (name||"?").trim().split(/\s+/).slice(0,2).map(function(w){return w[0]||"";}).join("").toUpperCase();
   }
 
+  // ---- Tema claro/escuro ----
+  var THEME_KEY = "planner-theme";
+  var themeToggleBtn = document.getElementById("theme-toggle");
+  if(themeToggleBtn){
+    themeToggleBtn.addEventListener("click", function(){
+      var root = document.documentElement;
+      var current = root.getAttribute("data-theme");
+      var isDarkNow = current
+        ? current === "dark"
+        : (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+      var next = isDarkNow ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try{ localStorage.setItem(THEME_KEY, next); }catch(e){}
+    });
+  }
+
   function defaultData(){
     return {
       title: "Atividades",
